@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :watchlist_cards
   resources :watchlists
   resources :set_groups
   resources :portfolio_cards
