@@ -3,7 +3,7 @@ require 'uri'
 require 'json'
 require 'pp'
 
-uri = URI.parse("http://api.tcgplayer.com/v1.32.0/catalog/products?categoryId=2&groupId=2613&getExtendedFields=true&offset=0&limit=1")
+uri = URI.parse("http://api.tcgplayer.com/v1.32.0/pricing/group/2578")
 request = Net::HTTP::Get.new(uri)
 request["Accept"] = "application/json"
 request["Authorization"] = "bearer GvFa3UDTVhJqfcz90MBAB0IkjQLbNH1sVSO6S_iMB0qbf7YdOCekSYvOGsHbv8ui4QmL_ALCPggUJAVfnC8Z6XmbWlaz7wuG7XWYrBgW_0VthXe4Jf5DLF8BVS00ThIpNNJjnj7c6lYHWAHdHTrE-LS1TBTsgVzviTT9XZqUOkjTwpSx3Zs7nGqi8Ak5Gn_W7joNf_4WjZ7iSHhKKNic5pT9o3KsfcDwPDXots0fFxCeh4kBybd6HimBWcJYzkkYryvixnF3bwYOGozKctBlxbt8DYHAy7YeA8dAZreAb_JnkLEZ2e_ph_NVXrG03288Sy5XSw"
@@ -16,6 +16,9 @@ response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
   http.request(request)
 end
 
+#fifth price #<Price id: 2866, amount: 0.58, product_id: 211606, edition: "1st Edition", created_at: "2020-05-14 18:17:48", updated_at: "2020-05-14 18:17:48">
+#1 price after one run
+
 #all sets = http://api.tcgplayer.com/v1.32.0/catalog/groups?categoryId=2&isSupplemental=true
 #Individual card info = "http://api.tcgplayer.com/v1.32.0/catalog/products?categoryId=2&productName=Adamancipator%20Researcher
 #pricing for individual card = http://api.tcgplayer.com/v1.32.0/pricing/product/211605
@@ -24,7 +27,7 @@ end
 
 #492 Sets
 response.code
-pp JSON.parse(response.body)
+pp JSON.parse(response.body)["results"]
 # ["results"].map do |booster| 
 #   name = booster["name"]
 #   group_id = booster["groupId"]

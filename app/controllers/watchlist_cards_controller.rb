@@ -1,0 +1,2 @@
+class WatchlistCardsController < ApplicationController
+end
