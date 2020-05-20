@@ -105,7 +105,7 @@ def get_all_card_data
                         card_type = obj["value"]
                     when obj["name"] == "Description"
                         description = obj["value"]
-                    when obj["name"] == "Monster Type"
+                    when obj["name"] == "MonsterType"
                         monster_type = obj["value"]
                     when obj["name"] == "Attack"
                         attack = obj["value"].to_i
@@ -116,7 +116,7 @@ def get_all_card_data
 
                 name = card["name"]
                 group_id = card["groupId"].to_i
-                img_url = card["url"]
+                img_url = card["imageUrl"]
                 product_id = card["productId"].to_i
 
                 Card.create(
