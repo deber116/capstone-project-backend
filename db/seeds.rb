@@ -8,7 +8,7 @@ def pull_data(url)
     uri = URI.parse(url)
     request = Net::HTTP::Get.new(uri)
     request["Accept"] = "application/json"
-    request["Authorization"] = "bearer GvFa3UDTVhJqfcz90MBAB0IkjQLbNH1sVSO6S_iMB0qbf7YdOCekSYvOGsHbv8ui4QmL_ALCPggUJAVfnC8Z6XmbWlaz7wuG7XWYrBgW_0VthXe4Jf5DLF8BVS00ThIpNNJjnj7c6lYHWAHdHTrE-LS1TBTsgVzviTT9XZqUOkjTwpSx3Zs7nGqi8Ak5Gn_W7joNf_4WjZ7iSHhKKNic5pT9o3KsfcDwPDXots0fFxCeh4kBybd6HimBWcJYzkkYryvixnF3bwYOGozKctBlxbt8DYHAy7YeA8dAZreAb_JnkLEZ2e_ph_NVXrG03288Sy5XSw"
+    request["Authorization"] = "bearer 9_fETokeva3cY9qR-JEDjrBE--RfPKMko9ZCdclb6N0f9S2PHpqLOnHL1bs9M8QOxyU_SY7qlpFcSQDCMNob4cl5b_AVSv_jgfTIitiwXW2seyd03_Iq9PF4IrOv7Ry7CCOy2wnxvaQlU-EjI9Sr6Vc0OeEe18vlY37uf6j2FO9eNNZSpIj5MoQrJ8T5Onw8NLkXTUulnnGx0yxXOtFQWHuOwZJkM4tFRFqaNFUUUnkNrCAf47nZHWu3wO8Iogq5pnrIl6ObNf86ZO6o-Sxoa8xsNCxpm6pDn3rRtDyIggc1OwIw9cx0boWK0ReyWgCroUcXdA"
 
     req_options = {
         use_ssl: uri.scheme == "https",
@@ -142,4 +142,5 @@ def get_all_card_data
 end
 
 get_all_card_data
+
 

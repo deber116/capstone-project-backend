@@ -28,3 +28,10 @@ puts response.body
 "userName":"2b6898bd-638a-45d9-a2eb-c7ffbbf893be",
 ".issued":"Tue, 12 May 2020 04:34:48 GMT",
 ".expires":"Tue, 26 May 2020 04:34:48 GMT"}
+
+{"access_token":"9_fETokeva3cY9qR-JEDjrBE--RfPKMko9ZCdclb6N0f9S2PHpqLOnHL1bs9M8QOxyU_SY7qlpFcSQDCMNob4cl5b_AVSv_jgfTIitiwXW2seyd03_Iq9PF4IrOv7Ry7CCOy2wnxvaQlU-EjI9Sr6Vc0OeEe18vlY37uf6j2FO9eNNZSpIj5MoQrJ8T5Onw8NLkXTUulnnGx0yxXOtFQWHuOwZJkM4tFRFqaNFUUUnkNrCAf47nZHWu3wO8Iogq5pnrIl6ObNf86ZO6o-Sxoa8xsNCxpm6pDn3rRtDyIggc1OwIw9cx0boWK0ReyWgCroUcXdA",
+"token_type":"bearer",
+"expires_in":1209599,
+"userName":"2b6898bd-638a-45d9-a2eb-c7ffbbf893be",
+".issued":"Tue, 26 May 2020 05:36:47 GMT",
+".expires":"Tue, 09 Jun 2020 05:36:47 GMT"}
