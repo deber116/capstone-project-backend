@@ -1,24 +1,5 @@
-# README
+# TCG Buying Assistant 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the backend repo for TCG Buying Assistant, an application built to allow investors in Yu-Gi-Oh! collectibles track historical prices of products using data from tcgplayer.com
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+A live demo of this project can be found at https://vimeo.com/425368947
