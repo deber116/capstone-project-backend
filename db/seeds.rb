@@ -47,6 +47,7 @@ end
 get_all_set_group_data
 
 def get_pricing_data_by_group(group)
+    
 
     results = pull_data("https://api.tcgplayer.com/v1.32.0/pricing/group/#{group.group_id}")["results"]
     results.each do |price|
@@ -60,24 +61,31 @@ def get_pricing_data_by_group(group)
     end
 end
 
+def delete_old_price_data 
+    Price.where('created_at < ?', 30.days.ago).each do |price|
+        price.destroy
+    end
+end
+
 
 
 def get_all_card_data
     Card.all.each {|c| c.destroy}
 
-    secret_slayers = SetGroup.find_by(name: "Secret Slayers")
-    eternity_code = SetGroup.find_by(name: "Eternity Code")
-    ignition_assault = SetGroup.find_by(name: "Ignition Assault")
-    rising_rampage = SetGroup.find_by(name: "Rising Rampage")
-    dark_neostorm = SetGroup.find_by(name: "Dark Neostorm")
-    savage_strike = SetGroup.find_by(name: "Savage Strike")
-    soul_fusion = SetGroup.find_by(name: "Soul Fusion")
-    flames_of_destruction = SetGroup.find_by(name: "Flames of Destruction")
+    # secret_slayers = SetGroup.find_by(name: "Secret Slayers")
+    # eternity_code = SetGroup.find_by(name: "Eternity Code")
+    # ignition_assault = SetGroup.find_by(name: "Ignition Assault")
+    # rising_rampage = SetGroup.find_by(name: "Rising Rampage")
+    # dark_neostorm = SetGroup.find_by(name: "Dark Neostorm")
+    # savage_strike = SetGroup.find_by(name: "Savage Strike")
+    # soul_fusion = SetGroup.find_by(name: "Soul Fusion")
+    # flames_of_destruction = SetGroup.find_by(name: "Flames of Destruction")
 
-    selected_sets = [secret_slayers, eternity_code, ignition_assault, rising_rampage, dark_neostorm, savage_strike, soul_fusion, flames_of_destruction]
+    # selected_sets = [secret_slayers, eternity_code, ignition_assault, rising_rampage, dark_neostorm, savage_strike, soul_fusion, flames_of_destruction]
 
     maxOffset = 1000
-    selected_sets.each do |booster|
+    # selected_sets.each do |booster|
+    SetGroup.all.each do |booster|
 
         currentOffset = 0
         while currentOffset < maxOffset do
@@ -141,6 +149,7 @@ def get_all_card_data
     end
 end
 
+delete_old_price_data
 get_all_card_data
 
 
