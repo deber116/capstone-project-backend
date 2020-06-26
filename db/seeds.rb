@@ -3,12 +3,35 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'pp'
+require 'date'
+
+def check_auth_token 
+    if ApiToken.all == [] || Date.parse(ApiToken.last.expiration_date) <= Date.today
+        uri = URI.parse("https://api.tcgplayer.com/token")
+        request = Net::HTTP::Post.new(uri)
+        request.set_form_data(
+            "client_id" => "2b6898bd-638a-45d9-a2eb-c7ffbbf893be",
+            "client_secret" => "fecc7bbe-b323-4afd-b016-c673dad402b5",
+            "grant_type" => "client_credentials",
+        )
+
+        req_options = {
+            use_ssl: uri.scheme == "https",
+        }
+
+        response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+            http.request(request)
+        end
+
+        ApiToken.create(token: JSON.parse(response.body)["access_token"], expiration_date: JSON.parse(response.body)[".expires"])
+    end
+end
 
 def pull_data(url)
     uri = URI.parse(url)
     request = Net::HTTP::Get.new(uri)
     request["Accept"] = "application/json"
-    request["Authorization"] = "bearer 9_fETokeva3cY9qR-JEDjrBE--RfPKMko9ZCdclb6N0f9S2PHpqLOnHL1bs9M8QOxyU_SY7qlpFcSQDCMNob4cl5b_AVSv_jgfTIitiwXW2seyd03_Iq9PF4IrOv7Ry7CCOy2wnxvaQlU-EjI9Sr6Vc0OeEe18vlY37uf6j2FO9eNNZSpIj5MoQrJ8T5Onw8NLkXTUulnnGx0yxXOtFQWHuOwZJkM4tFRFqaNFUUUnkNrCAf47nZHWu3wO8Iogq5pnrIl6ObNf86ZO6o-Sxoa8xsNCxpm6pDn3rRtDyIggc1OwIw9cx0boWK0ReyWgCroUcXdA"
+    request["Authorization"] = "bearer #{ApiToken.last.token}"
 
     req_options = {
         use_ssl: uri.scheme == "https",
@@ -28,7 +51,7 @@ def get_all_set_group_data
     currentOffset = 0
     while currentOffset < maxOffset do
         
-        response = pull_data("http://api.tcgplayer.com/v1.32.0/catalog/groups?categoryId=2&offset=#{currentOffset}&limit=100")
+        response = pull_data("https://api.tcgplayer.com/v1.32.0/catalog/groups?categoryId=2&offset=#{currentOffset}&limit=100")
         results = response["results"]
 
         #API only allows 100 results at a time. Need to calculate the number of offsets and redeclare variable used in loop
@@ -44,11 +67,11 @@ def get_all_set_group_data
     end  
 end
 
-get_all_set_group_data
 
 def get_pricing_data_by_group(group)
+    
 
-    results = pull_data("http://api.tcgplayer.com/v1.32.0/pricing/group/#{group.group_id}")["results"]
+    results = pull_data("https://api.tcgplayer.com/v1.32.0/pricing/group/#{group.group_id}")["results"]
     results.each do |price|
         updatedPrice = nil
         if price["marketPrice"]
@@ -60,28 +83,23 @@ def get_pricing_data_by_group(group)
     end
 end
 
+def delete_old_price_data 
+    Price.where('created_at < ?', 30.days.ago).each do |price|
+        price.destroy
+    end
+end
+
 
 
 def get_all_card_data
     Card.all.each {|c| c.destroy}
 
-    secret_slayers = SetGroup.find_by(name: "Secret Slayers")
-    eternity_code = SetGroup.find_by(name: "Eternity Code")
-    ignition_assault = SetGroup.find_by(name: "Ignition Assault")
-    rising_rampage = SetGroup.find_by(name: "Rising Rampage")
-    dark_neostorm = SetGroup.find_by(name: "Dark Neostorm")
-    savage_strike = SetGroup.find_by(name: "Savage Strike")
-    soul_fusion = SetGroup.find_by(name: "Soul Fusion")
-    flames_of_destruction = SetGroup.find_by(name: "Flames of Destruction")
-
-    selected_sets = [secret_slayers, eternity_code, ignition_assault, rising_rampage, dark_neostorm, savage_strike, soul_fusion, flames_of_destruction]
-
     maxOffset = 1000
-    selected_sets.each do |booster|
+    SetGroup.all.each do |booster|
 
         currentOffset = 0
         while currentOffset < maxOffset do
-            response = pull_data("http://api.tcgplayer.com/v1.32.0/catalog/products?categoryId=2&groupId=#{booster.group_id}&getExtendedFields=true&offset=#{currentOffset}&limit=100")
+            response = pull_data("https://api.tcgplayer.com/v1.32.0/catalog/products?categoryId=2&groupId=#{booster.group_id}&getExtendedFields=true&offset=#{currentOffset}&limit=100")
             results = response["results"]
 
             maxOffset = (((response["totalItems"].to_f) / 100).ceil()) * 100
@@ -141,6 +159,9 @@ def get_all_card_data
     end
 end
 
+check_auth_token
+get_all_set_group_data
+delete_old_price_data
 get_all_card_data
 
 

@@ -1,5 +1,8 @@
 require 'net/http'
 require 'uri'
+require 'json'
+require 'date'
+
 
 uri = URI.parse("https://api.tcgplayer.com/token")
 request = Net::HTTP::Post.new(uri)
@@ -17,7 +20,8 @@ response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
   http.request(request)
 end
 
-puts response.body
+
+puts JSON.parse(response.body)
 
 # Public Key: 2b6898bd-638a-45d9-a2eb-c7ffbbf893be
 # Private Key: fecc7bbe-b323-4afd-b016-c673dad402b5
@@ -35,3 +39,10 @@ puts response.body
 "userName":"2b6898bd-638a-45d9-a2eb-c7ffbbf893be",
 ".issued":"Tue, 26 May 2020 05:36:47 GMT",
 ".expires":"Tue, 09 Jun 2020 05:36:47 GMT"}
+
+{"access_token":"ftHxP1M48FLwHiWa41vTRYuPLGNs27uS3uAS9d4kk5k-Xu428-PrjfSXPM8sdV2hvF92aNBQ0AAtk7s7rW15rk9JlHKkGSEGOqzucW0w9QtM1gbwpAohh97WhS2_HhJSQDol04jKARKyXVt6icDB0s2ee_gijvtgOWXGWFuc8I_z_9yrwEV9HPhEpQrqgG2v6N6jYulLfahXoOscBBwtQrimMy-yOyBXrvlKkv-JxlISAcinCY0SNhFwM5YKWACo97_FktwrDwK7n40DKcxCYMda5pi0acaNqI0KBK70FX2yRsMdVh5CFXSXCYdvuNdcIb24lw",
+"token_type":"bearer",
+"expires_in":1209599,
+"userName":"2b6898bd-638a-45d9-a2eb-c7ffbbf893be",
+".issued":"Mon, 01 Jun 2020 01:47:38 GMT",
+".expires":"Mon, 15 Jun 2020 01:47:38 GMT"}
