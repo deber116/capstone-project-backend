@@ -1,6 +1,7 @@
 require 'net/http'
 require 'uri'
 require 'json'
+require 'date'
 
 
 uri = URI.parse("https://api.tcgplayer.com/token")
@@ -20,9 +21,7 @@ response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
 end
 
 
-puts JSON.parse(response.body)["access_token"]
-
-#MIGHT HAVE TO PERSIST TO DB
+puts JSON.parse(response.body)
 
 # Public Key: 2b6898bd-638a-45d9-a2eb-c7ffbbf893be
 # Private Key: fecc7bbe-b323-4afd-b016-c673dad402b5

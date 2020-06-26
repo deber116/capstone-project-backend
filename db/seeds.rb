@@ -3,12 +3,35 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'pp'
+require 'date'
+
+def check_auth_token 
+    if ApiToken.all == [] || Date.parse(ApiToken.last.expiration_date) <= Date.today
+        uri = URI.parse("https://api.tcgplayer.com/token")
+        request = Net::HTTP::Post.new(uri)
+        request.set_form_data(
+            "client_id" => "2b6898bd-638a-45d9-a2eb-c7ffbbf893be",
+            "client_secret" => "fecc7bbe-b323-4afd-b016-c673dad402b5",
+            "grant_type" => "client_credentials",
+        )
+
+        req_options = {
+            use_ssl: uri.scheme == "https",
+        }
+
+        response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+            http.request(request)
+        end
+
+        ApiToken.create(token: JSON.parse(response.body)["access_token"], expiration_date: JSON.parse(response.body)[".expires"])
+    end
+end
 
 def pull_data(url)
     uri = URI.parse(url)
     request = Net::HTTP::Get.new(uri)
     request["Accept"] = "application/json"
-    request["Authorization"] = "bearer ftHxP1M48FLwHiWa41vTRYuPLGNs27uS3uAS9d4kk5k-Xu428-PrjfSXPM8sdV2hvF92aNBQ0AAtk7s7rW15rk9JlHKkGSEGOqzucW0w9QtM1gbwpAohh97WhS2_HhJSQDol04jKARKyXVt6icDB0s2ee_gijvtgOWXGWFuc8I_z_9yrwEV9HPhEpQrqgG2v6N6jYulLfahXoOscBBwtQrimMy-yOyBXrvlKkv-JxlISAcinCY0SNhFwM5YKWACo97_FktwrDwK7n40DKcxCYMda5pi0acaNqI0KBK70FX2yRsMdVh5CFXSXCYdvuNdcIb24lw"
+    request["Authorization"] = "bearer #{ApiToken.last.token}"
 
     req_options = {
         use_ssl: uri.scheme == "https",
@@ -44,7 +67,6 @@ def get_all_set_group_data
     end  
 end
 
-get_all_set_group_data
 
 def get_pricing_data_by_group(group)
     
@@ -72,19 +94,7 @@ end
 def get_all_card_data
     Card.all.each {|c| c.destroy}
 
-    # secret_slayers = SetGroup.find_by(name: "Secret Slayers")
-    # eternity_code = SetGroup.find_by(name: "Eternity Code")
-    # ignition_assault = SetGroup.find_by(name: "Ignition Assault")
-    # rising_rampage = SetGroup.find_by(name: "Rising Rampage")
-    # dark_neostorm = SetGroup.find_by(name: "Dark Neostorm")
-    # savage_strike = SetGroup.find_by(name: "Savage Strike")
-    # soul_fusion = SetGroup.find_by(name: "Soul Fusion")
-    # flames_of_destruction = SetGroup.find_by(name: "Flames of Destruction")
-
-    # selected_sets = [secret_slayers, eternity_code, ignition_assault, rising_rampage, dark_neostorm, savage_strike, soul_fusion, flames_of_destruction]
-
     maxOffset = 1000
-    # selected_sets.each do |booster|
     SetGroup.all.each do |booster|
 
         currentOffset = 0
@@ -149,6 +159,8 @@ def get_all_card_data
     end
 end
 
+check_auth_token
+get_all_set_group_data
 delete_old_price_data
 get_all_card_data
 
