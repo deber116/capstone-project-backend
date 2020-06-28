@@ -10,8 +10,8 @@ def check_auth_token
         uri = URI.parse("https://api.tcgplayer.com/token")
         request = Net::HTTP::Post.new(uri)
         request.set_form_data(
-            "client_id" => "2b6898bd-638a-45d9-a2eb-c7ffbbf893be",
-            "client_secret" => "fecc7bbe-b323-4afd-b016-c673dad402b5",
+            "client_id" => ENV["CLIENT_ID"],
+            "client_secret" => ENV["CLIENT_SECRET"],
             "grant_type" => "client_credentials",
         )
 
